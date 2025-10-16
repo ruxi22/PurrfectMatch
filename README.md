@@ -56,7 +56,7 @@ PurrfectMatch bridges the gap between potential adopters and animal shelters thr
 - **Deployment:** Docker for containerized, consistent environments  
 
 
-The architecture follows a modular and scalable design, allowing easy expansion in future milestones.
+The architecture follows a modular and scalable design, allowing easy expansion in future development.
 
 
 
@@ -117,7 +117,7 @@ The following **five non-trivial design patterns**, including essential architec
 
 
 ## Conclusion
-**PurrfectMatch** is designed with scalability and maintainability in mind. By leveraging five key design patterns and a clear modular architecture, the project ensures robust functionality, extensibility, and ease of future development. This document lays the foundation for implementation and milestone progression.
+The planned architecture is designed to be modular and scalable, which will allow easy expansion in future development.
 
 
 
