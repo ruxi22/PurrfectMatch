@@ -116,8 +116,7 @@ The following **five non-trivial design patterns**, including essential architec
 
 
 
-## Conclusion
-The planned architecture is designed to be modular and scalable, which will allow easy expansion in future development.
+
 
 
 
