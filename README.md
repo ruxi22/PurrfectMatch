@@ -15,6 +15,8 @@
 ## Project Description
 PurrfectMatch bridges the gap between potential adopters and animal shelters through an intuitive, interactive platform. It provides features that benefit both end users (adopters) and shelter administrators, ensuring a smooth, transparent, and responsible adoption process.
 
+![PurrfectMatch Logo](logo.png)
+
 ### Core Objectives
 - Facilitate pet discovery and matching based on compatibility, lifestyle, and preferences.
 - Streamline adoption management for shelters with digital workflows and record keeping.
