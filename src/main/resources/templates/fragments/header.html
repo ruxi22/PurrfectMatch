@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<body>
+
+<nav th:fragment="navbar">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 3rem; background: #fff5f8; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+    <!-- Logo -->
+    <a th:href="@{/}">
+      <img src="/logo.png" alt="Logo" style="height: 70px;">
+    </a>
+
+    <!-- Navigation links -->
+    <div style="display: flex; align-items: center;">
+      <a th:href="@{/}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">Home</a>
+      <a th:href="@{/about}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">About</a>
+      <a th:href="@{/adopt}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">Adopt</a>
+
+      <!-- Login link -->
+      <a th:href="@{/login}" class="login-btn" sec:authorize="!isAuthenticated()"
+         style="background: #ec4899; color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; margin-left: 1.5rem;">
+        Login
+      </a>
+
+      <!-- Sign Out form -->
+      <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline; margin-left: 1.5rem;">
+        <button type="submit" class="login-btn" style="border:none; background:none; color:#222; cursor:pointer; font-weight: 700;">
+          Sign Out
+        </button>
+      </form>
+
+      <!-- Google Translate dropdown -->
+      <div id="google_translate_element" class="translate-dropdown" style="margin-left: 1.5rem;"></div>
+    </div>
+
+  </div>
+</nav>
+
+</body>
+</html>

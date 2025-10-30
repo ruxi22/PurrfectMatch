@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purrfect Match</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <style>
+        body {
+          font-family: 'Nunito', sans-serif;
+          margin: 0;
+          background: #fff5f8;
+          color: #333;
+        }
+
+        .hero {
+          text-align: left;
+          padding: 2rem;
+        }
+        .hero img {
+          width: 80%;
+          max-width: 700px;
+          border-radius: 1rem;
+          margin: 1rem auto;
+          display: block;
+        }
+
+        .section-title {
+          text-align: center;
+          margin: 2rem 0 1rem;
+          font-size: 1.5rem;
+        }
+
+        .pets-preview, .success-stories {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 1.5rem;
+          padding: 0 1.5rem;
+        }
+
+        .pet-card, .story-card {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          overflow: hidden;
+          max-width: 300px;
+          text-align: center;
+        }
+
+        .pet-card img, .story-card img {
+          width: auto;
+          height: 300px;
+          object-fit: cover;
+        }
+
+        .pet-card p, .story-card p {
+          padding: 0 1rem 1rem;
+        }
+
+        .match-section {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          align-items: center;
+          margin: 2rem;
+          background: #ffeef5;
+          border-radius: 1rem;
+          padding: 2rem;
+        }
+
+        .match-section div {
+          flex: 1;
+          min-width: 280px;
+          padding: 1rem;
+        }
+
+        .match-section img {
+          height: 500px;
+          width: auto;
+          border-radius: 1rem;
+        }
+
+        .match-section button, .hero button {
+          padding: 0.75rem 1.5rem;
+          background: #ff4081;
+          border: none;
+          color: white;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-weight: bold;
+          margin-top: 1rem;
+        }
+
+        .testimonial-section {
+          background: white;
+          padding: 2rem;
+          border-top: 1px solid #eee;
+        }
+
+        .testimonial-section h3 {
+          text-align: center;
+        }
+
+        .testimonials {
+          display: flex;
+          justify-content: center;
+          gap: 1.5rem;
+          margin-top: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .testimonial {
+          max-width: 250px;
+          background: #fff0f5;
+          border-radius: 1rem;
+          padding: 1rem;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        footer {
+          text-align: center;
+          padding: 2rem;
+          background: #fafafa;
+          font-size: 0.9rem;
+        }
+
+        .btn-group {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .btn-group a {
+          padding: 0.75rem 1.25rem;
+          background: #ff4081;
+          color: white;
+          text-decoration: none;
+          border-radius: 0.5rem;
+        }
+
+        .story-card {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          overflow: hidden;
+          width: 100%;
+          max-width: 700px;
+          text-align: center;
+        }
+    </style>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,ro,fr,es,de,it',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+          }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</head>
+<body>
+
+<!-- Include navbar from header.html fragment -->
+<div th:replace="fragments/header :: navbar"></div>
+
+<section class="hero">
+    <h1>🐾 PURRFECT MATCH</h1>
+    <p>PurrfectMatch is a web application designed to connect pet lovers with local animal shelters. The platform makes the adoption process easier while providing useful tools for shelters to manage their animals efficiently.</p>
+    <button>Adopt now</button>
+    <br>
+    <img src="https://oshiprint.in/image/cache/catalog/poster/new/mqp1024-1100x733.jpeg.webp" alt="cat and dog photo"/>
+    <br>
+</section>
+
+<h3 class="section-title">🐾 Find, Love, Adopt 🐾</h3>
+<section class="pets-preview">
+    <div class="pet-card">
+        <img src="https://pisicabritish.ro/wp-content/uploads/2024/02/IMG-20240215-WA0015-e1708883183175.jpg" alt="Pet 1">
+        <p>Luna (British Shorthair)</p>
+        <p>A calm and affectionate kitty who loves cozy naps and gentle head rubs. She’s independent but enjoys quiet company.</p>
+    </div>
+    <div class="pet-card">
+        <img src="https://thumbs.dreamstime.com/b/labrador-retriever-puppy-short-coated-britisch-month-old-261059570.jpg" alt="Pet 2">
+        <p>Bailey (Labdrador)</p>
+        <p>A playful and loyal pup with a heart full of love! He’s always up for an adventure and adores belly rubs.</p>
+    </div>
+    <div class="pet-card">
+        <img src="https://frankfurt.apollo.olxcdn.com/v1/files/2iorf29rivui3-RO/image" alt="Pet 3">
+        <p>Nibbles (Hamster)</p>
+        <p>A tiny ball of energy who loves exploring and munching on seeds. Curious and friendly, he enjoys gentle handling.</p>
+    </div>
+</section>
+
+<section class="match-section">
+    <div>
+        <h2>Find Your Purrfect Match</h2>
+        <ul>
+            <li>Browse, Connect, Adopt</li>
+            <ul>Discover lovable pets from nearby shelters and give them a forever home.</ul>
+            <br>
+            <li>Easy Adoption Process</li>
+            <ul>Submit applications directly to shelters through our platform.</ul>
+            <br>
+            <li>Pet Care Tips & Reminders</li>
+            <ul>Track feeding schedules, vet visits, and training milestones.</ul>
+        </ul>
+        <br>
+        <button>Learn More</button>
+    </div>
+    <div>
+        <img src="https://i.pinimg.com/736x/7f/9f/03/7f9f03fa77898ea74f75b560f2e6e464.jpg" alt="Match Illustration">
+    </div>
+</section>
+
+<h3 class="section-title">Adoption Success Stories</h3>
+<section class="success-stories">
+    <div class="story-card">
+        <img src="https://d.newsweek.com/en/full/1630892/cat-stock-getty.jpg" alt="Success 1">
+        <p>🐱 Whiskers – From Timid to Treasured</p>
+        <p>A shy rescue cat who found a loving home and now enjoys cozy naps by the window.</p>
+    </div>
+    <div class="story-card">
+        <img src="https://www.thesprucepets.com/thmb/WnToJ1_ch5OmlTXpRnlZyp4ICDM=/2128x0/filters:no_upscale():strip_icc()/cute-girl-with-a-budgie-165581065-57ffdcf03df78cbc2893db7d.jpg" alt="Success 2">
+        <p>🐦 Kiwi – A Songbird’s New Beginning</p>
+        <p>A cheerful budgerigar who loves singing to brighten up their new family's mornings. </p>
+    </div>
+</section>
+
+<section class="testimonial-section">
+    <h3>⭐ Real stories from adopters</h3>
+    <div class="testimonials">
+        <div class="testimonial">
+            <p>"I was amazed by how easy it was to find and adopt my new best friend. The platform made everything smooth!"</p>
+            <strong>- Emma R.</strong>
+        </div>
+        <div class="testimonial">
+            <p>"I loved the search filters! They helped me find a dog that fit perfectly with my lifestyle."</p>
+            <strong>- Jason M.</strong>
+        </div>
+        <div class="testimonial">
+            <p>"As a busy professional, I appreciated how straightforward the adoption process was. I found Luna in no time!"</p>
+            <strong>- Sophia T.</strong>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>Learn more about us</p>
+    <div class="btn-group">
+        <a href="#">Browse Stories</a>
+        <a href="#">Start Your Adoption</a>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.8rem;">&copy; 2025 Purrfect Match. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

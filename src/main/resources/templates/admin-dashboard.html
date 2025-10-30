@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <title>Admin Dashboard - Pets</title>
+  <style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 500;
+    }
+
+    .nav-links a:hover {
+        text-decoration: underline;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .filter-container {
+        width: 80%;
+        margin: 20px auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .filter-container input {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1.5px solid #ccc;
+        font-size: 14px;
+        flex: 1 1 30%;
+    }
+
+    .grid {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .card {
+        display: flex;
+        gap: 1rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        padding: 1rem;
+        align-items: center;
+    }
+
+    .card img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .card-content {
+        flex: 1;
+    }
+
+    .card-content h3 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .card-content p {
+        margin: 0.4rem 0;
+    }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,ro,fr,es,de,it',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<h1>All Pets</h1>
+
+<div class="filter-container">
+  <input type="text" id="nameFilter" placeholder="Filter by Name" onkeyup="filterPets()">
+  <input type="text" id="breedFilter" placeholder="Filter by Breed" onkeyup="filterPets()">
+  <input type="text" id="genderFilter" placeholder="Filter by Gender" onkeyup="filterPets()">
+</div>
+
+<div class="grid" id="petGrid">
+  <div class="card" th:each="pet : ${pets}">
+    <img th:src="@{${pet.photoPath}}" th:alt="${pet.name}" />
+
+    <div class="card-content">
+      <h3 th:text="${pet.name}"></h3>
+      <p><b>Breed:</b> <span th:text="${pet.breed}">Breed</span></p>
+      <p><b>Age:</b> <span th:text="${pet.age} + ' Years'">Age</span></p>
+      <p><b>Gender:</b> <span th:text="${pet.gender}">Gender</span></p>
+      <p><b>Health:</b> <span th:text="${pet.health}">Health</span></p>
+      <p><b>Personality:</b> <span th:text="${pet.personality}">Personality</span></p>
+    </div>
+    <form th:action="@{'/admin/pets/delete/' + ${pet.id}}" method="post"
+          onsubmit="return confirm('Are you sure you want to delete this pet?');"
+          style="margin-left: auto;">
+      <button type="submit"
+              style="
+              background-color: #dc3545;
+              color: white;
+              border: none;
+              padding: 8px 16px;
+              border-radius: 8px;
+              cursor: pointer;">
+        Delete
+      </button>
+    </form>
+  </div>
+</div>
+
+<div style="text-align: center; margin-bottom: 2rem;">
+  <a href="/admin/pets/new">
+    <button style="
+        background-color: #28a745;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;">
+      Add New Pet
+    </button>
+  </a>
+</div>
+
+
+<script>
+  function filterPets() {
+      const nameInput = document.getElementById('nameFilter').value.toLowerCase();
+      const breedInput = document.getElementById('breedFilter').value.toLowerCase();
+      const genderInput = document.getElementById('genderFilter').value.toLowerCase();
+
+      const cards = document.querySelectorAll('#petGrid .card');
+
+      cards.forEach(card => {
+          const name = card.querySelector('h3').textContent.toLowerCase();
+          const breed = card.querySelector('p:nth-of-type(1) span').textContent.toLowerCase();
+          const gender = card.querySelector('p:nth-of-type(3) span').textContent.toLowerCase();
+
+          const matchesName = name.includes(nameInput);
+          const matchesBreed = breed.includes(breedInput);
+          const matchesGender = gender.includes(genderInput);
+
+          if (matchesName && matchesBreed && matchesGender) {
+              card.style.display = "";
+          } else {
+              card.style.display = "none";
+          }
+      });
+  }
+</script>
+
+</body>
+</html>
