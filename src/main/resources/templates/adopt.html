@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Adopt | PurrfectMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script>
+        function filterPets() {
+          const nameInput = document.getElementById('nameFilter').value.toLowerCase();
+          const breedInput = document.getElementById('breedFilter').value.toLowerCase();
+          const genderInput = document.getElementById('genderFilter').value.toLowerCase();
+
+          const cards = document.querySelectorAll('.card');
+
+          cards.forEach(card => {
+            const petName = card.querySelector('h3').textContent.toLowerCase();
+            const petBreed = card.querySelector('p:nth-of-type(1) span').textContent.toLowerCase();
+            const petGender = card.querySelector('p:nth-of-type(3) span').textContent.toLowerCase();
+
+            const matchesName = petName.includes(nameInput);
+            const matchesBreed = petBreed.includes(breedInput);
+            const matchesGender = !genderInput || petGender === genderInput;
+
+            if (matchesName && matchesBreed && matchesGender) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+    </script>
+
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Nunito', sans-serif;
+          background-color: #fff5f8;
+        }
+
+        .filter-container {
+            width: 80%;
+            margin: 20px auto 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-container input {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1.5px solid #ccc;
+            font-size: 14px;
+            flex: 1 1 30%;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-container input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        header {
+          background: #fff5f8;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 2rem;
+        }
+
+        nav a {
+          margin-left: 1.5rem;
+          text-decoration: none;
+          color: #222;
+          font-weight: 500;
+        }
+
+        nav a.login-btn {
+          background: #ec4899;
+          color: white;
+          padding: 0.6rem 1.2rem;
+          border-radius: 12px;
+          font-weight: 700;
+        }
+
+        .hero {
+          position: relative;
+          text-align: center;
+        }
+
+        .hero-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          border: none;
+        }
+
+        .hero-text {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: white;
+          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+        }
+
+
+        .hero h1 {
+          font-size: 2.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+          font-size: 1.2rem;
+          font-style: italic;
+        }
+
+        .filters {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          margin: 2rem;
+        }
+
+        .filters input {
+          padding: 0.5rem;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          width: 200px;
+        }
+
+        .filters button {
+          background-color: #a855f7;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 0.6rem 1.2rem;
+          cursor: pointer;
+        }
+
+        .grid {
+          max-width: 1000px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          padding: 2rem;
+        }
+
+        .card {
+          display: flex;
+          gap: 1rem;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          overflow: hidden;
+          padding: 1rem;
+          align-items: center;
+        }
+
+        .card img {
+          width: 200px;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 12px;
+        }
+
+        .card-content {
+          flex: 1;
+        }
+
+        .card-content h3 {
+          margin: 0;
+          font-size: 1.4rem;
+        }
+
+        .card-content p {
+          margin: 0.4rem 0;
+        }
+
+        .buttons {
+          margin-top: 0.5rem;
+        }
+
+        .buttons button {
+          margin-right: 0.5rem;
+          padding: 0.4rem 0.8rem;
+          border: none;
+          border-radius: 8px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+
+        .adopt {
+          background: #db2777;
+          color: white;
+        }
+
+        .info {
+          background: #9333ea;
+          color: white;
+        }
+
+        footer {
+          background: #fff5f8;
+          padding: 2rem;
+          text-align: center;
+          font-size: 0.9rem;
+        }
+
+        /* Style for the login and sign out buttons */
+.login-btn {
+    background: none;
+    border: none;
+    color: #fff; /* adjust color as needed */
+    text-decoration: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.login-btn:hover {
+    color: #ccc; /* hover effect */
+}
+
+
+    </style>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,ro,fr,es,de,it',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+          }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+
+<div class="hero">
+    <img src="/adopt_bg.png" alt="Hero image" class="hero-img">
+    <div class="hero-text">
+        <h1>Find your Purrfect Match</h1>
+        <p><i>Find. Love. Adopt.</i></p>
+    </div>
+</div>
+
+<div class="filter-container">
+    <input type="text" id="nameFilter" placeholder="Filter by Name" onkeyup="filterPets()">
+    <input type="text" id="breedFilter" placeholder="Filter by Breed" onkeyup="filterPets()">
+    <input type="text" id="genderFilter" placeholder="Filter by Gender" onkeyup="filterPets()">
+</div>
+
+
+<div class="grid">
+    <div class="card" th:each="pet : ${pets}">
+        <img th:src="${pet.photoPath}" th:alt="${pet.name}">
+        <div class="card-content">
+            <h3 th:text="'🐾 ' + ${pet.name}"></h3>
+            <p><b>Breed:</b> <span th:text="${pet.breed}">Mixed</span></p>
+            <p><b>Age:</b> <span th:text="${pet.age} + ' Years'">3</span></p>
+            <p><b>Gender:</b> <span th:text="${pet.gender}">Male</span></p>
+            <p><b>Health:</b> <span th:text="${pet.health}">Healthy</span></p>
+            <p><b>Personality:</b> <span th:text="${pet.personality}">Loyal</span></p>
+            <div class="buttons">
+                <button class="adopt"
+                        th:onclick="'location.href=\'/pet/' + ${pet.id} + '\';'">
+                    Adopt now
+                </button>
+                <button class="info">More info</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer style="background-color: #fff5f8; padding: 3rem 2rem; color: #333;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; max-width: 1100px; margin: 0 auto;">
+
+        <div>
+            <img src="/logo.png" alt="Logo" style="height: 60px;">
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <img src="https://img.icons8.com/ios-filled/24/000000/facebook.png" alt="FB">
+                <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="LinkedIn">
+                <img src="https://img.icons8.com/ios-filled/24/000000/youtube-play.png" alt="YouTube">
+                <img src="https://img.icons8.com/ios-filled/24/000000/instagram-new.png" alt="Instagram">
+            </div>
+        </div>
+
+
+        <div style="display: flex; gap: 4rem; margin-top: 2rem;">
+            <div>
+                <h4>Useful Links</h4>
+                <p>Find a pet</p>
+                <p>Donate</p>
+                <p>Careers</p>
+            </div>
+            <div>
+                <h4>How you can help</h4>
+                <p>Adopt</p>
+                <p>Donate</p>
+                <p>Volunteer</p>
+            </div>
+            <div>
+                <h4>About</h4>
+                <p>Our Sponsors</p>
+                <p>Terms of Use</p>
+                <p>Privacy Policy</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Max | PurrfectMatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background-color: #fff5f8;
+      color: #222;
+    }
+
+    header {
+      background-color: #fff5f8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+    }
+
+    nav a {
+      margin-left: 2rem;
+      text-decoration: none;
+      color: #222;
+      font-weight: 500;
+    }
+
+    nav a.login-btn {
+      background: #ec4899;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 14px;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 0 1rem;
+    }
+
+    .container img {
+      width: 400px;
+      border-radius: 12px;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .info h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .info p {
+      margin-bottom: 0.5rem;
+    }
+
+    .adopt-btn {
+      background: #bfdbfe;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: 3rem auto 1rem;
+      padding: 0 1rem;
+    }
+
+    .more-pets {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .more-pets .card {
+      flex: 1;
+      min-width: 250px;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    }
+
+    .more-pets .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      background: #fff5f8;
+      padding: 3rem 2rem;
+    }
+
+    footer .grid {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    footer h4 {
+      margin-bottom: 0.5rem;
+    }
+
+    footer p {
+      margin: 0.3rem 0;
+    }
+
+    .social {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social img {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,ro,fr,es,de,it',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+
+<div class="container">
+  <img src="/max.png" alt="Max">
+  <div class="info">
+    <h1>🐕 Max</h1>
+    <p>A loyal dog with a heart full of love, always ready for a fun walk or a cuddle on the couch.</p>
+    <h3>$Free</h3>
+    <button class="adopt-btn">Adopt now</button>
+    <br><br>
+    <p>🐾 <b>Breed:</b> Mixed Breed</p>
+    <p>📅 <b>Age:</b> 3 Years Old</p>
+    <p>♂️ <b>Gender:</b> Male</p>
+    <p>🩺 <b>Health:</b> Max is in excellent health. He is up to date on all vaccinations, neutered, and regularly checked by the vet.</p>
+    <p>❤️ <b>Personality:</b> Max is a loyal and affectionate dog who adores human companionship. Great with kids and pets, enjoys car rides and belly rubs.</p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Discover more pets</h2>
+  <div class="more-pets">
+    <div class="card">
+      <img src="/mittens.png" alt="Mittens">
+      <h4>🐱 Mittens</h4>
+      <p>A playful cat who loves chasing toys and curling up in sunny spots for an afternoon nap.</p>
+      <p><b>$ Free</b></p>
+    </div>
+    <div class="card">
+      <img src="/sunny.png" alt="Sunny">
+      <h4>🐦 Sunny</h4>
+      <p>A cheerful budgerigar who fills the room with its sweet melodies, bringing joy to everyone.</p>
+      <p><b>$ Free</b></p>
+    </div>
+    <div class="card">
+      <img src="/biscuit.png" alt="Biscuit">
+      <h4>🐰 Biscuit</h4>
+      <p>A curious rabbit who enjoys hopping around and munching on fresh veggies in the garden.</p>
+      <p><b>$ Free</b></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="grid">
+    <div>
+      <img src="/logo.png" alt="Logo" height="60">
+      <div class="social">
+        <img src="https://img.icons8.com/ios-filled/24/000000/facebook.png" alt="fb">
+        <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="linkedin">
+        <img src="https://img.icons8.com/ios-filled/24/000000/youtube-play.png" alt="youtube">
+        <img src="https://img.icons8.com/ios-filled/24/000000/instagram-new.png" alt="instagram">
+      </div>
+    </div>
+    <div>
+      <h4>Useful Links</h4>
+      <p>Find a pet</p>
+      <p>Donate</p>
+      <p>Careers</p>
+    </div>
+    <div>
+      <h4>How you can help</h4>
+      <p>Adopt</p>
+      <p>Donate</p>
+      <p>Volunteer</p>
+    </div>
+    <div>
+      <h4>About</h4>
+      <p>Our Sponsors</p>
+      <p>Terms of Use</p>
+      <p>Privacy Policy</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

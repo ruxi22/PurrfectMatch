@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | PurrfectMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff5f8;
+            color: #222;
+        }
+
+        header {
+            background-color: #fff5f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+        }
+
+        nav a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #222;
+            font-weight: 500;
+        }
+
+        .login-container {
+            max-width: 400px;
+            background: #fecdd3;
+            margin: 3rem auto;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .login-container::before {
+            content: "";
+            background: url('/static/cat_login.png') no-repeat top right;
+            background-size: 80px;
+            position: absolute;
+            top: -40px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #d9468f;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .login-container p {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .login-container a {
+            color: #7c3aed;
+            text-decoration: none;
+        }
+
+        footer {
+            background: #fff5f8;
+            padding: 3rem 2rem;
+        }
+
+        footer .grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        footer h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        footer p {
+            margin: 0.3rem 0;
+        }
+
+        .social {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,ro,fr,es,de,it',
+            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+          }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<div class="login-container">
+    <h2>Log In</h2>
+
+    <!-- Security messages -->
+    <div th:if="${param.error}" style="color: red; text-align: center;">Invalid username or password.</div>
+    <div th:if="${param.logout}" style="color: green; text-align: center;">You have been logged out.</div>
+    <div th:if="${param.registered}" style="color: green; text-align: center;">Registration successful! Please log in.</div>
+
+    <form th:action="@{/login}" method="post">
+        <label for="username">Email</label>
+        <input type="text" id="username" name="username" placeholder="you@example.com" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+        <button type="submit" class="btn-login">Log in</button>
+    </form>
+
+    <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
+</div>
+
+<footer>
+    <div class="grid">
+        <div>
+            <img src="/logo.png" alt="Logo" height="60">
+            <div class="social">
+                <img src="https://img.icons8.com/ios-filled/24/000000/facebook.png" alt="fb">
+                <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="linkedin">
+                <img src="https://img.icons8.com/ios-filled/24/000000/youtube-play.png" alt="youtube">
+                <img src="https://img.icons8.com/ios-filled/24/000000/instagram-new.png" alt="instagram">
+            </div>
+        </div>
+        <div>
+            <h4>Useful Links</h4>
+            <p>Find a pet</p>
+            <p>Donate</p>
+            <p>Careers</p>
+        </div>
+        <div>
+            <h4>How you can help</h4>
+            <p>Adopt</p>
+            <p>Donate</p>
+            <p>Volunteer</p>
+        </div>
+        <div>
+            <h4>About</h4>
+            <p>Our Sponsors</p>
+            <p>Terms of Use</p>
+            <p>Privacy Policy</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

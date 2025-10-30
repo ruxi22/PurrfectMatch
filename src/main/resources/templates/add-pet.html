@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add New Pet</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background-color: #007BFF;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,ro,fr,es,de,it',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+<div class="container">
+  <h1>Add New Pet</h1>
+  <form th:action="@{/admin/pets/save}" method="post" enctype="multipart/form-data">
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Breed:</label>
+    <input type="text" name="breed" required>
+
+    <label>Age:</label>
+    <input type="number" name="age" required>
+
+    <label>Gender:</label>
+    <select name="gender">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <label>Health:</label>
+    <textarea name="health"></textarea>
+
+    <label>Personality:</label>
+    <textarea name="personality"></textarea>
+
+    <label>Photo:</label>
+    <input type="file" name="photo">
+
+    <label>Status:</label>
+    <select name="status">
+      <option value="AVAILABLE">Available</option>
+      <option value="RESERVED">Reserved</option>
+      <option value="ADOPTED">Adopted</option>
+    </select>
+
+    <button type="submit">Save Pet</button>
+  </form>
+</div>
+
+</body>
+</html>
