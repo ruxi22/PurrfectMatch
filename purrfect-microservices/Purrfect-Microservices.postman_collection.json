@@ -1,0 +1,1005 @@
+{
+	"info": {
+		"_postman_id": "purrfect-microservices-2024",
+		"name": "Purrfect Match - Microservices",
+		"description": "Complete API collection for Purrfect Match pet adoption microservices architecture. This collection demonstrates inter-service communication and all core functionalities.\n\n**Services:**\n- API Gateway (Port 8080)\n- Auth Service (Port 8081)\n- Pet Service (Port 8082)\n- Adoption Service (Port 8083)\n- Notification Service (Port 8084)\n\n**Setup:**\n1. Start all services using Docker: `docker-compose up -d`\n2. Wait for all services to be healthy (1-2 minutes)\n3. Run requests in order for best experience",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Auth Service",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john_doe\",\n    \"password\": \"password123\",\n    \"email\": \"john@example.com\",\n    \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user through the API Gateway"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john_doe\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login and receive JWT token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/auth/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"users"
+							]
+						},
+						"description": "Get all registered users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/auth/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get user details by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Direct)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"jane_smith\",\n    \"password\": \"password456\",\n    \"email\": \"jane@example.com\",\n    \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"users"
+							]
+						},
+						"description": "Create user directly (for admin purposes)"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication and user management endpoints"
+		},
+		{
+			"name": "2. Pet Service",
+			"item": [
+				{
+					"name": "Get All Pets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets"
+							]
+						},
+						"description": "Get all available pets"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pet by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets",
+								"1"
+							]
+						},
+						"description": "Get specific pet details by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Pet (JSON)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bella\",\n    \"breed\": \"Golden Retriever\",\n    \"age\": 2.5,\n    \"gender\": \"Female\",\n    \"health\": \"Healthy - vaccinated and spayed\",\n    \"personality\": \"Friendly, energetic, loves children\",\n    \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets"
+							]
+						},
+						"description": "Create a new pet (JSON format)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Pet with Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Max",
+									"type": "text"
+								},
+								{
+									"key": "breed",
+									"value": "Labrador",
+									"type": "text"
+								},
+								{
+									"key": "age",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "Male",
+									"type": "text"
+								},
+								{
+									"key": "health",
+									"value": "Excellent health, all shots up to date",
+									"type": "text"
+								},
+								{
+									"key": "personality",
+									"value": "Calm, obedient, good with other pets",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "AVAILABLE",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": [],
+									"description": "Optional: Upload a pet photo"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets"
+							]
+						},
+						"description": "Create a pet with photo upload (multipart/form-data)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Pet",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bella\",\n    \"breed\": \"Golden Retriever\",\n    \"age\": 3,\n    \"gender\": \"Female\",\n    \"health\": \"Excellent health\",\n    \"personality\": \"Very friendly and playful\",\n    \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/pets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets",
+								"1"
+							]
+						},
+						"description": "Update existing pet information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pet",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets",
+								"1"
+							]
+						},
+						"description": "Delete a pet from the system"
+					},
+					"response": []
+				}
+			],
+			"description": "Pet management endpoints"
+		},
+		{
+			"name": "3. Adoption Service",
+			"item": [
+				{
+					"name": "Get All Adoptions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions"
+							]
+						},
+						"description": "Get all adoption requests"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adoptions by User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get adoption requests filtered by user ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adoption by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions",
+								"1"
+							]
+						},
+						"description": "Get specific adoption request details"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Adoption Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions?userId=1&petId=1&appointmentDateTime=2024-12-25T10:00:00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "ID of the user requesting adoption"
+								},
+								{
+									"key": "petId",
+									"value": "1",
+									"description": "ID of the pet to adopt"
+								},
+								{
+									"key": "appointmentDateTime",
+									"value": "2024-12-25T10:00:00",
+									"description": "Appointment date and time (ISO 8601 format)"
+								}
+							]
+						},
+						"description": "Create a new adoption request. This triggers inter-service communication:\n1. Verifies user exists (Auth Service)\n2. Verifies pet exists and is available (Pet Service)\n3. Creates adoption record\n4. Sends notification via RabbitMQ (Notification Service)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Adoption Status - APPROVED",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions/1/status?status=APPROVED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "APPROVED",
+									"description": "Status: PENDING, APPROVED, REJECTED, COMPLETED"
+								}
+							]
+						},
+						"description": "Update adoption status to APPROVED. This triggers:\n1. Status update\n2. Pet status update to ADOPTED (Pet Service)\n3. Notification sent via RabbitMQ"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Adoption Status - REJECTED",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions/1/status?status=REJECTED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "REJECTED"
+								}
+							]
+						},
+						"description": "Update adoption status to REJECTED. Sends notification via RabbitMQ"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Adoption Status - COMPLETED",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions/1/status?status=COMPLETED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "COMPLETED"
+								}
+							]
+						},
+						"description": "Mark adoption as COMPLETED"
+					},
+					"response": []
+				}
+			],
+			"description": "Adoption request management. Demonstrates inter-service communication via REST APIs and RabbitMQ messaging."
+		},
+		{
+			"name": "4. Notification Service",
+			"item": [
+				{
+					"name": "Get All Notifications for User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get all notifications for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Unread Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications?userId=1&unreadOnly=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "unreadOnly",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Get only unread notifications for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Notification by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications",
+								"1"
+							]
+						},
+						"description": "Get specific notification details"
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications/1/read",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications",
+								"1",
+								"read"
+							]
+						},
+						"description": "Mark a notification as read"
+					},
+					"response": []
+				}
+			],
+			"description": "Notification management. Receives messages from Adoption Service via RabbitMQ."
+		},
+		{
+			"name": "5. Direct Service Access",
+			"item": [
+				{
+					"name": "Auth Service Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check if Auth Service is healthy (direct access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Pet Service Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check if Pet Service is healthy (direct access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Adoption Service Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check if Adoption Service is healthy (direct access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Notification Service Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check if Notification Service is healthy (direct access)"
+					},
+					"response": []
+				},
+				{
+					"name": "API Gateway Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Check if API Gateway is healthy (direct access)"
+					},
+					"response": []
+				},
+				{
+					"name": "RabbitMQ Management UI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:15672",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "15672"
+						},
+						"description": "Access RabbitMQ Management UI (credentials: guest/guest)"
+					},
+					"response": []
+				}
+			],
+			"description": "Direct access to individual services (bypassing API Gateway) and health checks"
+		},
+		{
+			"name": "6. Integration Test Scenario",
+			"item": [
+				{
+					"name": "Step 1 - Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"alice_wonder\",\n    \"password\": \"securePass789\",\n    \"email\": \"alice@example.com\",\n    \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Test Scenario Step 1: Register a new user"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 2 - Create Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Whiskers\",\n    \"breed\": \"Persian Cat\",\n    \"age\": 1.5,\n    \"gender\": \"Female\",\n    \"health\": \"Perfect health, vaccinated\",\n    \"personality\": \"Calm, affectionate, indoor cat\",\n    \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets"
+							]
+						},
+						"description": "Test Scenario Step 2: Add a pet to the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 3 - Create Adoption Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions?userId=1&petId=1&appointmentDateTime=2024-12-30T14:00:00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "petId",
+									"value": "1"
+								},
+								{
+									"key": "appointmentDateTime",
+									"value": "2024-12-30T14:00:00"
+								}
+							]
+						},
+						"description": "Test Scenario Step 3: User submits adoption request\n\nInter-service communication:\n- Adoption Service → Auth Service (verify user)\n- Adoption Service → Pet Service (verify pet)\n- Adoption Service → RabbitMQ → Notification Service"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 4 - Check Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications?userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Test Scenario Step 4: Verify notification was created via RabbitMQ"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 5 - Approve Adoption",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/adoptions/1/status?status=APPROVED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"adoptions",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "APPROVED"
+								}
+							]
+						},
+						"description": "Test Scenario Step 5: Admin approves the adoption\n\nInter-service communication:\n- Adoption Service → Pet Service (update pet status)\n- Adoption Service → RabbitMQ → Notification Service"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 6 - Verify Pet Status Changed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pets",
+								"1"
+							]
+						},
+						"description": "Test Scenario Step 6: Verify pet status changed to ADOPTED"
+					},
+					"response": []
+				},
+				{
+					"name": "Step 7 - Check New Notification",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/notifications?userId=1&unreadOnly=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "unreadOnly",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Test Scenario Step 7: Check for approval notification"
+					},
+					"response": []
+				}
+			],
+			"description": "Complete integration test scenario demonstrating the microservices workflow"
+		}
+	]
+}
+
+
