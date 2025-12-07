@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout code
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -22,33 +24,23 @@ jobs:
       # ---------- BACKEND MICROSERVICES ----------
       # Build Adoption Service
       - name: Build Adoption Service
-        run: |
-          cd adoption-service
-          mvn clean verify
+        run: mvn -B -DskipTests clean package --file adoption-service/pom.xml
 
       # Build Notification Service
       - name: Build Notification Service
-        run: |
-          cd notification-service
-          mvn clean verify
+        run: mvn -B -DskipTests clean package --file notification-service/pom.xml
 
       # Build Pet Service
       - name: Build Pet Service
-        run: |
-          cd pet-service
-          mvn clean verify
+        run: mvn -B -DskipTests clean package --file pet-service/pom.xml
 
       # Build Auth Service
       - name: Build Auth Service
-        run: |
-          cd auth-service
-          mvn clean verify
+        run: mvn -B -DskipTests clean package --file auth-service/pom.xml
 
       # Build API Gateway
       - name: Build API Gateway
-        run: |
-          cd api-gateway
-          mvn clean verify
+        run: mvn -B -DskipTests clean package --file api-gateway/pom.xml
 
       # ---------- DOCKER BUILDS ----------
       - name: Build Docker Images
