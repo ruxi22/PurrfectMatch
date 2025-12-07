@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | PurrfectMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #fff5f8;
+            color: #222;
+        }
+
+        header {
+            background-color: #fff5f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+        }
+
+        nav a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #222;
+            font-weight: 500;
+        }
+
+        .login-container {
+            max-width: 400px;
+            background: #fecdd3;
+            margin: 3rem auto;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .login-container::before {
+            content: "";
+            /* background: url('/static/cat_login.png') no-repeat top right; */
+            background-size: 80px;
+            position: absolute;
+            top: -40px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #d9468f;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .login-container p {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .login-container a {
+            color: #7c3aed;
+            text-decoration: none;
+        }
+
+        footer {
+            background: #fff5f8;
+            padding: 3rem 2rem;
+        }
+
+        footer .grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        footer h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        footer p {
+            margin: 0.3rem 0;
+        }
+
+        .social {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<div class="login-container">
+    <h2>Log In</h2>
+
+    <!-- Security messages -->
+    <div id="messageContainer" style="display: none;"></div>
+
+    <form id="loginForm" onsubmit="return false;">
+        <label for="username">Email</label>
+        <input type="text" id="username" name="username" placeholder="you@example.com" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+        <button type="button" class="btn-login" onclick="handleLogin()">Log in</button>
+    </form>
+
+    <p>Don't have an account? <a href="/register">Register here</a></p>
+</div>
+
+<footer>
+    <div class="grid">
+        <div>
+            <img src="/logo.png" alt="Logo" height="60">
+            <div class="social">
+                <img src="https://img.icons8.com/ios-filled/24/000000/facebook.png" alt="fb">
+                <img src="https://img.icons8.com/ios-filled/24/000000/linkedin.png" alt="linkedin">
+                <img src="https://img.icons8.com/ios-filled/24/000000/youtube-play.png" alt="youtube">
+                <img src="https://img.icons8.com/ios-filled/24/000000/instagram-new.png" alt="instagram">
+            </div>
+        </div>
+        <div>
+            <h4>Useful Links</h4>
+            <p>Find a pet</p>
+            <p>Donate</p>
+            <p>Careers</p>
+        </div>
+        <div>
+            <h4>How you can help</h4>
+            <p>Adopt</p>
+            <p>Donate</p>
+            <p>Volunteer</p>
+        </div>
+        <div>
+            <h4>About</h4>
+            <p>Our Sponsors</p>
+            <p>Terms of Use</p>
+            <p>Privacy Policy</p>
+        </div>
+    </div>
+</footer>
+
+<script src="/js/api.js"></script>
+<script>
+// Show messages from URL parameters
+function showMessages() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const messageContainer = document.getElementById('messageContainer');
+    
+    if (urlParams.get('error')) {
+        messageContainer.innerHTML = '<div style="color: red; text-align: center; padding: 10px; background: #ffebee; border-radius: 8px; margin-bottom: 10px;">Invalid username or password.</div>';
+        messageContainer.style.display = 'block';
+    }
+    if (urlParams.get('logout')) {
+        messageContainer.innerHTML = '<div style="color: green; text-align: center; padding: 10px; background: #e8f5e9; border-radius: 8px; margin-bottom: 10px;">You have been logged out.</div>';
+        messageContainer.style.display = 'block';
+    }
+    if (urlParams.get('registered')) {
+        messageContainer.innerHTML = '<div style="color: green; text-align: center; padding: 10px; background: #e8f5e9; border-radius: 8px; margin-bottom: 10px;">Registration successful! Please log in.</div>';
+        messageContainer.style.display = 'block';
+    }
+}
+
+// Handle login button click
+async function handleLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const messageContainer = document.getElementById('messageContainer');
+    
+    if (!username || !password) {
+        messageContainer.innerHTML = '<div style="color: red; text-align: center; padding: 10px; background: #ffebee; border-radius: 8px; margin-bottom: 10px;">Please enter email and password.</div>';
+        messageContainer.style.display = 'block';
+        return;
+    }
+    
+    try {
+        console.log('Login attempt:', username);
+        const response = await authAPI.login(username, password);
+        console.log('Login response:', response);
+        if (response && response.token) {
+            console.log('Login successful, response:', response);
+            console.log('User object:', response.user);
+            // Store user data
+            if (response.user) {
+                console.log('Storing user:', response.user);
+            }
+            // Redirect immediately - navbar will update on next page
+            window.location.href = '/';
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        messageContainer.innerHTML = '<div style="color: red; text-align: center; padding: 10px; background: #ffebee; border-radius: 8px; margin-bottom: 10px;">Invalid username or password.</div>';
+        messageContainer.style.display = 'block';
+    }
+}
+
+// Initialize page - NO AUTO-REDIRECT, just show messages
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showMessages);
+} else {
+    showMessages();
+}
+</script>
+</body>
+</html>

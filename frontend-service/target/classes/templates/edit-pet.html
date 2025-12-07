@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Pet</title>
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      background-color: #007BFF;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .current-photo {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .current-photo img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+    }
+
+    .current-photo p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,ro,fr,es,de,it',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+<div class="container">
+  <h1>Edit Pet</h1>
+  <div id="messageContainer" style="display: none; margin-bottom: 20px;"></div>
+  <div id="loadingMessage" style="text-align: center; padding: 20px;">Loading pet data...</div>
+  <form id="editPetForm" style="display: none;">
+    <div class="current-photo" id="currentPhotoContainer">
+      <p>Current Photo:</p>
+      <img id="currentPhoto" src="" alt="Current pet photo" 
+           onerror="this.style.display='none'; document.getElementById('currentPhotoContainer').innerHTML='<p style=\'color:#666;\'>No photo available</p>';">
+    </div>
+
+    <label>Name:</label>
+    <input type="text" name="name" id="name" required>
+
+    <label>Breed:</label>
+    <input type="text" name="breed" id="breed" required>
+
+    <label>Age:</label>
+    <input type="number" name="age" id="age" step="0.1" required>
+
+    <label>Gender:</label>
+    <select name="gender" id="gender">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+
+    <label>Health:</label>
+    <textarea name="health" id="health"></textarea>
+
+    <label>Personality:</label>
+    <textarea name="personality" id="personality"></textarea>
+
+    <label>Photo (leave empty to keep current):</label>
+    <input type="file" name="photo" id="photo" accept="image/*">
+
+    <label>Status:</label>
+    <select name="status" id="status">
+      <option value="AVAILABLE">Available</option>
+      <option value="RESERVED">Reserved</option>
+      <option value="ADOPTED">Adopted</option>
+    </select>
+
+    <button type="submit">Update Pet</button>
+  </form>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+// IMMEDIATE ADMIN CHECK - Protect page before anything loads
+(function checkAdminAccess() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        window.location.href = '/login?error=unauthorized&redirect=/admin/pets/edit';
+        return;
+    }
+    
+    let role = null;
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            role = user.role;
+        } catch (e) {}
+    }
+    
+    if (!role && token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            role = payload.role;
+        } catch (e) {}
+    }
+    
+    if (role !== 'ADMIN') {
+        alert('Access denied. Admin privileges required.');
+        window.location.href = '/';
+        return;
+    }
+})();
+
+// Ensure getPetImageUrl is available (fallback if api.js hasn't loaded)
+if (typeof getPetImageUrl === 'undefined') {
+    window.getPetImageUrl = function(photoPath) {
+        if (!photoPath) {
+            return 'http://localhost:8090/default-pet.png';
+        }
+        if (photoPath.startsWith('http://') || photoPath.startsWith('https://')) {
+            return photoPath;
+        }
+        const API_BASE_URL = 'http://localhost:8090';
+        return `${API_BASE_URL}${photoPath.startsWith('/') ? photoPath : '/' + photoPath}`;
+    };
+}
+
+let petId = null;
+
+// Wait for DOM to be ready before loading pet
+function initEditPage() {
+  // Get pet ID from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  petId = urlParams.get('id');
+
+  if (!petId) {
+    const loadingMsg = document.getElementById('loadingMessage');
+    if (loadingMsg) {
+      loadingMsg.innerHTML = '<div style="color: red;">Error: No pet ID provided</div>';
+    }
+    return;
+  }
+  
+  // Wait for api.js to load
+  if (typeof petAPI === 'undefined' || typeof isAdmin === 'undefined') {
+    setTimeout(initEditPage, 100);
+    return;
+  }
+  
+  // Load pet data
+  loadPet(petId);
+}
+
+async function loadPet(id) {
+  if (typeof isAdmin === 'undefined' || !isAdmin()) {
+    window.location.href = '/login?error=unauthorized';
+    return;
+  }
+
+  try {
+    const pet = await petAPI.getById(id);
+    
+    // Wait for form elements to be available
+    const nameField = document.getElementById('name');
+    const breedField = document.getElementById('breed');
+    const ageField = document.getElementById('age');
+    const genderField = document.getElementById('gender');
+    const healthField = document.getElementById('health');
+    const personalityField = document.getElementById('personality');
+    const statusField = document.getElementById('status');
+    const currentPhoto = document.getElementById('currentPhoto');
+    const currentPhotoContainer = document.getElementById('currentPhotoContainer');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const editPetForm = document.getElementById('editPetForm');
+    
+    if (!nameField || !editPetForm) {
+      console.error('Form elements not found, retrying...');
+      setTimeout(() => loadPet(id), 100);
+      return;
+    }
+    
+    // Fill form with pet data
+    nameField.value = pet.name || '';
+    breedField.value = pet.breed || '';
+    ageField.value = pet.age || '';
+    genderField.value = pet.gender || 'Male';
+    healthField.value = pet.health || '';
+    personalityField.value = pet.personality || '';
+    statusField.value = pet.status || 'AVAILABLE';
+    
+    // Show current photo if available
+    if (pet.photoPath && currentPhoto) {
+      const photoUrl = getPetImageUrl(pet.photoPath);
+      currentPhoto.src = photoUrl;
+    } else if (currentPhotoContainer) {
+      currentPhotoContainer.innerHTML = '<p style="color:#666;">No photo available</p>';
+    }
+    
+    // Show form
+    if (loadingMessage) {
+      loadingMessage.style.display = 'none';
+    }
+    if (editPetForm) {
+      editPetForm.style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Failed to load pet:', error);
+    const loadingMessage = document.getElementById('loadingMessage');
+    if (loadingMessage) {
+      loadingMessage.innerHTML = '<div style="color: red;">Failed to load pet: ' + (error.message || 'Unknown error') + '</div>';
+    }
+  }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEditPage);
+} else {
+  initEditPage();
+}
+
+document.getElementById('editPetForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  if (!isAdmin()) {
+    window.location.href = '/login?error=unauthorized';
+    return;
+  }
+
+  const photoFile = document.getElementById('photo').files[0];
+  const messageContainer = document.getElementById('messageContainer');
+  
+  try {
+    if (photoFile) {
+      // With photo - use FormData
+      const formData = new FormData();
+      formData.append('name', document.getElementById('name').value);
+      formData.append('breed', document.getElementById('breed').value);
+      formData.append('age', document.getElementById('age').value);
+      formData.append('gender', document.getElementById('gender').value);
+      formData.append('health', document.getElementById('health').value);
+      formData.append('personality', document.getElementById('personality').value);
+      formData.append('status', document.getElementById('status').value);
+      formData.append('photo', photoFile);
+      
+      await petAPI.updateWithPhoto(petId, formData);
+    } else {
+      // Without photo - use JSON
+      const petData = {
+        name: document.getElementById('name').value,
+        breed: document.getElementById('breed').value,
+        age: parseFloat(document.getElementById('age').value),
+        gender: document.getElementById('gender').value,
+        health: document.getElementById('health').value,
+        personality: document.getElementById('personality').value,
+        status: document.getElementById('status').value
+      };
+      
+      await petAPI.update(petId, petData);
+    }
+    
+    window.location.href = '/admin/dashboard';
+  } catch (error) {
+    messageContainer.innerHTML = '<div style="color: red; text-align: center; padding: 10px; background: #ffebee; border-radius: 8px;">Failed to update pet: ' + error.message + '</div>';
+    messageContainer.style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>
+

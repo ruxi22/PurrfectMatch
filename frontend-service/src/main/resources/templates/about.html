@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>About | PurrfectMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Nunito', sans-serif;
+          background-color: #fef5f8;
+        }
+
+        /* Style for the login and sign out buttons */
+.login-btn {
+    background: none;
+    border: none;
+    color: #fff; /* adjust color as needed */
+    text-decoration: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.login-btn:hover {
+    color: #ccc; /* hover effect */
+}
+
+
+        header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem 2rem;
+          background-color: #fef5f8;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+          margin-left: 2rem;
+          text-decoration: none;
+          color: #333;
+          font-weight: 500;
+        }
+
+        nav a.login-btn {
+          background-color: #ec4899;
+          color: white;
+          padding: 0.6rem 1.2rem;
+          border-radius: 12px;
+          font-weight: 700;
+        }
+
+        .container {
+          display: flex;
+          padding: 2rem;
+          gap: 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .left {
+          flex: 2;
+        }
+
+        .right {
+          flex: 1;
+          text-align: center;
+        }
+
+        h1 {
+          font-size: 2.2rem;
+          color: #222;
+          margin-bottom: 1rem;
+        }
+
+        ul {
+          padding-left: 1.5rem;
+        }
+
+        h3 {
+          margin-top: 2rem;
+        }
+
+        form {
+          margin-top: 1rem;
+        }
+
+        input, textarea {
+          width: 100%;
+          padding: 0.7rem;
+          margin: 0.5rem 0;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          font-size: 1rem;
+        }
+
+        button {
+          background-color: #7c3aed;
+          color: white;
+          padding: 0.8rem 2rem;
+          border: none;
+          border-radius: 8px;
+          font-size: 1rem;
+          margin-top: 1rem;
+          cursor: pointer;
+        }
+
+        footer {
+          margin-top: 4rem;
+          background-color: #fef5f8;
+          padding: 2rem;
+          text-align: center;
+          font-size: 0.9rem;
+          border-top: 1px solid #eee;
+        }
+
+        .footer-grid {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 1rem;
+        }
+
+        .footer-col {
+          text-align: left;
+        }
+
+        .footer-col p {
+          margin: 0.5rem 0;
+        }
+
+        .logo {
+          height: 60px;
+        }
+
+        img.illustration {
+          max-width: 100%;
+          border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<div class="container">
+    <div class="left">
+        <h1>About</h1>
+        <p>Welcome to PurrfectMatch – your go-to platform for pet adoption! We connect loving pet parents with local animal shelters, making the adoption process easier and more efficient for everyone. Whether you're adopting a pet or managing a shelter, we’ve got you covered!</p>
+
+        <h3>What We Offer</h3>
+        <ul>
+            <li><b>Adoption Portal:</b> Find your perfect pet by filtering species, age, location, and more.</li>
+            <li><b>Pet Care Tracker:</b> Stay on top of feeding, vet visits, and important care tasks.</li>
+            <li><b>Shelter Management:</b> Shelters can easily manage pet profiles, adoption requests, and communications.</li>
+            <li><b>Community Hub:</b> Join a vibrant community to share stories, advice, and connect with fellow pet lovers.</li>
+        </ul>
+
+        <h3>Why PurrfectMatch?</h3>
+        <ul>
+            <li>For Adopters: Discover pets quickly, make informed choices, and get helpful reminders to care for your new friend.</li>
+            <li>For Shelters: Streamline operations and focus more on what matters – the animals!</li>
+        </ul>
+
+        <p>Join PurrfectMatch today and find your purrfect companion!</p>
+
+        <h3>Contact us</h3>
+        <form>
+            <input type="text" placeholder="First name">
+            <input type="text" placeholder="Last name">
+            <input type="email" placeholder="Email address">
+            <textarea rows="4" placeholder="Your message"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div class="right">
+        <img src="https://github.com/anamaria2004/PurrfectMatch/blob/main/logo.png?raw=true" alt="Contact Support" class="illustration">
+    </div>
+</div>
+
+<footer>
+    <img src="https://github.com/anamaria2004/PurrfectMatch/blob/main/logo.png?raw=true" class="logo" alt="Logo Footer" />
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>Useful Links</h4>
+            <p>Find a pet</p>
+            <p>Donate</p>
+            <p>Careers</p>
+        </div>
+        <div class="footer-col">
+            <h4>How you can help</h4>
+            <p>Adopt</p>
+            <p>Donate</p>
+            <p>Volunteer</p>
+        </div>
+        <div class="footer-col">
+            <h4>About</h4>
+            <p>Our Sponsors</p>
+            <p>Terms of Use</p>
+            <p>Privacy Policy</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

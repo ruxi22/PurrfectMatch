@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <title>Admin Dashboard - Pets</title>
+  <style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #007BFF;
+        color: white;
+        padding: 12px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 500;
+    }
+
+    .nav-links a:hover {
+        text-decoration: underline;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .filter-container {
+        width: 80%;
+        margin: 20px auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .filter-container input {
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1.5px solid #ccc;
+        font-size: 14px;
+        flex: 1 1 30%;
+    }
+
+    .grid {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .card {
+        display: flex;
+        gap: 1rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        padding: 1rem;
+        align-items: center;
+    }
+
+    .card img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .card-content {
+        flex: 1;
+    }
+
+    .card-content h3 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    .card-content p {
+        margin: 0.4rem 0;
+    }
+  </style>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,ro,fr,es,de,it',
+        layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: navbar"></div>
+
+<h1>All Pets</h1>
+
+<div class="filter-container">
+  <input type="text" id="nameFilter" placeholder="Filter by Name" onkeyup="filterPets()">
+  <input type="text" id="breedFilter" placeholder="Filter by Breed" onkeyup="filterPets()">
+  <select id="genderFilter" onchange="filterPets()" style="padding: 8px 12px; border-radius: 6px; border: 1.5px solid #ccc; font-size: 14px; flex: 1 1 30%; background: white; cursor: pointer;">
+    <option value="">All Genders</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+</div>
+
+<div class="grid" id="petGrid">
+  <!-- Pets will be loaded here -->
+</div>
+
+<div style="text-align: center; margin-bottom: 2rem;">
+  <a href="/admin/pets/new">
+    <button style="
+        background-color: #28a745;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;">
+      Add New Pet
+    </button>
+  </a>
+</div>
+
+
+<script src="/js/api.js"></script>
+<script>
+// IMMEDIATE ADMIN CHECK - Protect page before anything loads
+(function checkAdminAccess() {
+    // Check if user is logged in and is admin
+    const token = localStorage.getItem('authToken');
+    const userStr = localStorage.getItem('currentUser');
+    
+    if (!token) {
+        // Not logged in - redirect to login
+        console.log('Not logged in, redirecting to login');
+        window.location.href = '/login?error=unauthorized&redirect=/admin/dashboard';
+        return;
+    }
+    
+    // Extract role from token or user object
+    let role = null;
+    let username = null;
+    
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            role = user.role;
+            username = user.username;
+        } catch (e) {
+            console.error('Error parsing user:', e);
+        }
+    }
+    
+    // If role not in user object, extract from token
+    if (!role && token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            role = payload.role;
+            username = payload.sub;
+        } catch (e) {
+            console.error('Error decoding token:', e);
+        }
+    }
+    
+    // Check if user is admin
+    if (role !== 'ADMIN') {
+        console.log('User is not admin (role:', role, '), redirecting to home');
+        alert('Access denied. Admin privileges required.');
+        window.location.href = '/';
+        return;
+    }
+    
+    console.log('Admin access verified. User:', username, 'Role:', role);
+    
+    // Wait for api.js to fully load before initializing dashboard
+    (function waitForAPI() {
+        if (typeof petAPI === 'undefined' || typeof isAdmin === 'undefined' || typeof getCurrentUser === 'undefined') {
+            console.log('Waiting for api.js to load...');
+            setTimeout(waitForAPI, 100);
+            return;
+        }
+        console.log('api.js loaded, initializing admin dashboard');
+        initAdminDashboard();
+    })();
+})();
+
+// Ensure getPetImageUrl is available (fallback if api.js hasn't loaded)
+if (typeof getPetImageUrl === 'undefined') {
+    window.getPetImageUrl = function(photoPath) {
+        if (!photoPath) {
+            return 'http://localhost:8090/default-pet.png';
+        }
+        if (photoPath.startsWith('http://') || photoPath.startsWith('https://')) {
+            return photoPath;
+        }
+        const API_BASE_URL = 'http://localhost:8090';
+        return `${API_BASE_URL}${photoPath.startsWith('/') ? photoPath : '/' + photoPath}`;
+    };
+}
+
+let allPets = [];
+
+function initAdminDashboard() {
+  // Load pets when page is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadPets);
+  } else {
+    loadPets();
+  }
+}
+
+  async function loadPets() {
+    // Admin check already done at page load, but double-check
+    if (typeof isAdmin !== 'undefined' && !isAdmin()) {
+      console.warn('Admin check failed, redirecting');
+      window.location.href = '/login?error=unauthorized';
+      return;
+    }
+
+    try {
+      allPets = await petAPI.getAll();
+      renderPets(allPets);
+    } catch (error) {
+      console.error('Failed to load pets:', error);
+    }
+  }
+
+  function renderPets(pets) {
+    const container = document.getElementById('petGrid');
+    container.innerHTML = pets.map(pet => `
+      <div class="card">
+        <img src="${getPetImageUrl(pet.photoPath)}" alt="${pet.name}" 
+             onerror="console.error('Failed to load image for ${pet.name}:', this.src); this.src='http://localhost:8090/default-pet.png';"
+             onload="console.log('Image loaded successfully for ${pet.name}:', this.src)">
+        <div class="card-content">
+          <h3>${pet.name}</h3>
+          <p><b>Breed:</b> <span>${pet.breed}</span></p>
+          <p><b>Age:</b> <span>${pet.age} Years</span></p>
+          <p><b>Gender:</b> <span>${pet.gender}</span></p>
+          <p><b>Health:</b> <span>${pet.health}</span></p>
+          <p><b>Personality:</b> <span>${pet.personality}</span></p>
+          <p><b>Status:</b> <span>${pet.status || 'AVAILABLE'}</span></p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-left: auto;">
+          <button onclick="editPet(${pet.id})" style="background-color: #007BFF; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Edit</button>
+          <button onclick="deletePet(${pet.id})" style="background-color: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Make functions globally accessible for onclick handlers
+  window.editPet = function(id) {
+    window.location.href = `/admin/pets/edit?id=${id}`;
+  };
+
+  window.deletePet = async function(id) {
+    if (!confirm('Are you sure you want to delete this pet?')) return;
+    try {
+      await petAPI.delete(id);
+      await loadPets();
+    } catch (error) {
+      alert('Failed to delete pet');
+    }
+  };
+
+  function filterPets() {
+    const nameInput = document.getElementById('nameFilter').value.toLowerCase();
+    const breedInput = document.getElementById('breedFilter').value.toLowerCase();
+    const genderInput = document.getElementById('genderFilter').value; // Keep original case for exact match
+
+    const filtered = allPets.filter(pet => {
+      const matchesName = pet.name.toLowerCase().includes(nameInput);
+      const matchesBreed = pet.breed.toLowerCase().includes(breedInput);
+      // For dropdown, match exactly (case-insensitive) or show all if empty
+      const matchesGender = !genderInput || pet.gender.toLowerCase() === genderInput.toLowerCase();
+      return matchesName && matchesBreed && matchesGender;
+    });
+
+    renderPets(filtered);
+  }
+</script>
+
+</body>
+</html>
