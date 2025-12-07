@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "**/src/main/java"
+    ],
+    "files.exclude": {
+        "**/database-seed/*.sql": false
+    },
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

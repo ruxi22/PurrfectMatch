@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="navbar">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 3rem; background: #fff5f8; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+    <!-- Logo -->
+    <a th:href="@{/}">
+      <img src="/logo.png" alt="Logo" style="height: 70px;">
+    </a>
+
+    <!-- Navigation links -->
+    <div style="display: flex; align-items: center;">
+      <a th:href="@{/}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">Home</a>
+      <a th:href="@{/about}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">About</a>
+      <a th:href="@{/adopt}" style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500;">Adopt</a>
+
+      <!-- Admin Dashboard link - shown only for ADMIN users -->
+      <a href="/admin/dashboard" id="admin-link" 
+         style="margin-left: 1.5rem; text-decoration: none; color: #222; font-weight: 500; display: none;">
+        Admin Dashboard
+      </a>
+      <script>
+      // Quick check to show admin link if user is admin (runs immediately, doesn't wait for api.js)
+      (function() {
+          const token = localStorage.getItem('authToken');
+          const adminLink = document.getElementById('admin-link');
+          if (adminLink && token) {
+              try {
+                  const payload = JSON.parse(atob(token.split('.')[1]));
+                  if (payload.role === 'ADMIN') {
+                      adminLink.style.display = 'block';
+                  }
+              } catch (e) {
+                  // Token decode failed, will be handled by main script
+              }
+          }
+      })();
+      </script>
+
+      <!-- Login button - shown when NOT logged in -->
+      <a href="/login" id="login-link" class="login-btn"
+         style="background: #ec4899; color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; margin-left: 1.5rem; text-decoration: none;">
+        Login
+      </a>
+
+      <!-- Sign Up button - shown when NOT logged in -->
+      <a href="/register" id="signup-link" class="login-btn"
+         style="background: #ec4899; color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; margin-left: 1.5rem; text-decoration: none;">
+        Sign Up
+      </a>
+
+      <!-- Sign Out button - shown when logged in -->
+      <button id="signout-btn" onclick="window.handleLogout()" class="login-btn" 
+              style="border:none; background: #ec4899; color: white; padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 700; margin-left: 1.5rem; cursor: pointer; display: none;">
+        Sign Out
+      </button>
+      
+      <script>
+      // Define handleLogout immediately so it's available when button is clicked
+      window.handleLogout = function() {
+          console.log('Sign out button clicked');
+          // Clear authentication data
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('currentUser');
+          
+          // Redirect to login page
+          window.location.href = '/login?logout=true';
+      };
+      
+      // IMMEDIATE check for login status - runs before api.js loads
+      (function() {
+          const token = localStorage.getItem('authToken');
+          const loginLink = document.getElementById('login-link');
+          const signupLink = document.getElementById('signup-link');
+          const signoutBtn = document.getElementById('signout-btn');
+          const adminLink = document.getElementById('admin-link');
+          
+          if (token) {
+              // User is logged in - hide login/signup, show signout
+              if (loginLink) loginLink.style.display = 'none';
+              if (signupLink) signupLink.style.display = 'none';
+              if (signoutBtn) signoutBtn.style.display = 'block';
+              
+              // Check for admin role
+              try {
+                  const payload = JSON.parse(atob(token.split('.')[1]));
+                  if (payload.role === 'ADMIN' && adminLink) {
+                      adminLink.style.display = 'block';
+                  }
+              } catch (e) {
+                  // Token decode failed, will be handled by main script
+              }
+          } else {
+              // User is not logged in - show login/signup, hide signout
+              if (loginLink) loginLink.style.display = 'block';
+              if (signupLink) signupLink.style.display = 'block';
+              if (signoutBtn) signoutBtn.style.display = 'none';
+              if (adminLink) adminLink.style.display = 'none';
+          }
+      })();
+      </script>
+    </div>
+
+  </div>
+</nav>
+
+<script src="/js/api.js"></script>
+<script th:inline="javascript">
+console.log('=== NAVBAR SCRIPT STARTING ===');
+// Update navbar based on login status and user role
+(function() {
+    console.log('Navbar IIFE executing...');
+    function updateNavbar() {
+        console.log('updateNavbar() called');
+        const loginLink = document.getElementById('login-link');
+        const signupLink = document.getElementById('signup-link');
+        const signoutBtn = document.getElementById('signout-btn');
+        const adminLink = document.getElementById('admin-link');
+        
+        if (!loginLink) {
+            console.log('login-link not found');
+            return;
+        }
+        
+        // Check if user is logged in
+        const token = localStorage.getItem('authToken');
+        const userStr = localStorage.getItem('currentUser');
+        let user = null;
+        if (userStr) {
+            try {
+                user = JSON.parse(userStr);
+            } catch (e) {
+                console.error('Error parsing user from localStorage:', e);
+            }
+        }
+        
+        // Get role from user object or token
+        let role = null;
+        if (user && user.role) {
+            role = user.role;
+        } else if (token) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                role = payload.role; // Role is stored in JWT token
+                // If we got role/userId from token but user object doesn't have it, update it
+                if (role && (!user || !user.role)) {
+                    const updatedUser = user || {};
+                    updatedUser.role = role;
+                    updatedUser.username = payload.sub || updatedUser.username;
+                    if (payload.userId && !updatedUser.id) {
+                        updatedUser.id = payload.userId;
+                    }
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                } else if (token && user && !user.id) {
+                    // If user object exists but missing ID, add it from token
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        if (payload.userId) {
+                            user.id = payload.userId;
+                            localStorage.setItem('currentUser', JSON.stringify(user));
+                        }
+                    } catch (e) {
+                        console.error('Error extracting userId from token:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Error decoding token:', e);
+            }
+        }
+        
+        const isLoggedIn = !!token;
+        const isAdminUser = role === 'ADMIN';
+        
+        console.log('Navbar update - isLoggedIn:', isLoggedIn, 'isAdmin:', isAdminUser, 'role:', role);
+        
+        if (isLoggedIn) {
+            // User is logged in - hide login/signup, show signout
+            // Hide login/signup buttons
+            if (loginLink) loginLink.style.display = 'none';
+            if (signupLink) signupLink.style.display = 'none';
+            
+            // Show signout button
+            if (signoutBtn) {
+                signoutBtn.style.display = 'block';
+            }
+            
+            // Show admin link only for admin users
+            if (adminLink) {
+                if (isAdminUser) {
+                    adminLink.style.display = 'block';
+                } else {
+                    adminLink.style.display = 'none';
+                }
+            }
+        } else {
+            // User is not logged in - show login/signup, hide signout and admin link
+            if (loginLink) {
+                loginLink.textContent = 'Login';
+                loginLink.href = '/login';
+                loginLink.style.display = 'block';
+            }
+            if (signupLink) signupLink.style.display = 'block';
+            if (signoutBtn) signoutBtn.style.display = 'none';
+            if (adminLink) adminLink.style.display = 'none';
+        }
+    }
+    
+    console.log('Setting up navbar update triggers...');
+    // Force update immediately
+    console.log('Calling updateNavbar() immediately...');
+    updateNavbar();
+    
+    // Run on window load (after all scripts are loaded) - this is the most reliable
+    if (document.readyState === 'complete') {
+        // Page already loaded
+        console.log('Page already loaded - updating navbar immediately');
+        updateNavbar();
+    } else {
+        // Wait for page to fully load
+        window.addEventListener('load', function() {
+            console.log('Window loaded - updating navbar');
+            updateNavbar();
+        });
+    }
+    
+    // Also run on DOM ready (in case load event already fired)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - updating navbar');
+            setTimeout(updateNavbar, 100);
+            setTimeout(updateNavbar, 500);
+            setTimeout(updateNavbar, 1000);
+        });
+    } else {
+        console.log('DOM already loaded - updating navbar');
+        setTimeout(updateNavbar, 100);
+        setTimeout(updateNavbar, 500);
+        setTimeout(updateNavbar, 1000);
+    }
+    
+    // Run periodically to catch state changes and ensure it updates
+    let attempts = 0;
+    const interval = setInterval(function() {
+        updateNavbar();
+        attempts++;
+        if (attempts > 100) { // Run for 50 seconds (100 * 500ms) to catch late-loading pages
+            console.log('Stopping interval after 100 attempts');
+            clearInterval(interval);
+        }
+    }, 500);
+    
+    // Watch for changes to the login link (in case something resets it)
+    const loginLink = document.getElementById('login-link');
+    if (loginLink) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                    console.log('Login link changed, re-updating navbar');
+                    setTimeout(updateNavbar, 50);
+                }
+            });
+        });
+        
+        observer.observe(loginLink, {
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
+    }
+    
+    // Also run when page becomes visible (handles back/forward navigation)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            console.log('Page visible - updating navbar');
+            updateNavbar();
+        }
+    });
+    
+    // Run on focus (handles tab switching)
+    window.addEventListener('focus', function() {
+        console.log('Window focused - updating navbar');
+        updateNavbar();
+    });
+    
+    // Watch for localStorage changes (from other tabs)
+    window.addEventListener('storage', function() {
+        console.log('Storage changed - updating navbar');
+        updateNavbar();
+    });
+})();
+
+// Handle logout (also defined above, but keep this as backup)
+if (typeof window.handleLogout === 'undefined') {
+    window.handleLogout = function() {
+        console.log('Sign out button clicked');
+        // Clear authentication data
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        
+        // Redirect to login page
+        window.location.href = '/login?logout=true';
+    };
+}
+</script>
+
+</body>
+</html>
