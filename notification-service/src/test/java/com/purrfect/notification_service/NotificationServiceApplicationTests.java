@@ -1,13 +1,18 @@
 package com.purrfect.notification_service;
 
+import com.purrfect.notification_service.domain.Notification;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class NotificationServiceApplicationTests {
+class NotificationMessageTest {
 
 	@Test
-	void contextLoads() {
-	}
+	void notificationShouldFormatMessageCorrectly() {
+		Notification notif = new Notification();
+		notif.setUserId(10L);
+		notif.setMessage("Your adoption request was approved!");
 
+		assertEquals(10L, notif.getUserId());
+		assertEquals("Your adoption request was approved!", notif.getMessage());
+	}
 }

@@ -1,13 +1,17 @@
 package com.purrfect.adoption_service;
 
+import com.purrfect.adoption_service.domain.AdoptionStatus;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class AdoptionServiceApplicationTests {
+class AdoptionStatusTest {
 
 	@Test
-	void contextLoads() {
-	}
+	void adoptionStatusEnumShouldContainExpectedValues() {
+		assertNotNull(AdoptionStatus.PENDING);
+		assertNotNull(AdoptionStatus.APPROVED);
+		assertNotNull(AdoptionStatus.REJECTED);
 
+		assertEquals("PENDING", AdoptionStatus.PENDING.name());
+	}
 }

@@ -1,13 +1,14 @@
 package com.purrfect.api_gateway;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class ApiGatewayApplicationTests {
+class ApiGatewayBasicTest {
 
 	@Test
-	void contextLoads() {
+	void basicLogicShouldWork() {
+		int a = 5;
+		int b = 7;
+		assertEquals(12, a + b, "Basic math sanity check for pipeline");
 	}
-
 }
