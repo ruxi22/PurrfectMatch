@@ -1,4 +1,4 @@
-name: PurrfectMatch CI Pipeline
+name: PurrfectMatch CI/CD Pipeline
 
 on:
   push:
@@ -42,24 +42,66 @@ jobs:
       - name: Build Frontend Service
         run: mvn -B clean package -f frontend-service/pom.xml
 
-      # ---------- DOCKER BUILD ----------
-      - name: Build Docker Images
-        run: docker compose build
+      # ---------- DOCKER LOGIN ----------
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # ---------- DEPLOYMENT SIMULATION ----------
+      # ---------- DOCKER BUILD & PUSH ----------
+      # Autentificarea permite împingerea imaginilor
+
+      - name: Build & Push Auth Service Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./auth-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
+
+      - name: Build & Push Pet Service Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./pet-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/pet-service:latest
+
+      - name: Build & Push Adoption Service Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./adoption-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/adoption-service:latest
+
+      - name: Build & Push Notification Service Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./notification-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/notification-service:latest
+
+      - name: Build & Push API Gateway Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./api-gateway
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
+
+      - name: Build & Push Frontend Service Image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend-service:latest
+
+      # ---------- OPTIONAL: SIMULATED DEPLOY ----------
       - name: Simulate Deployment (Start & Verify)
         run: |
           echo "Starting Docker Environment..."
           docker compose up -d
-
           echo "Waiting 60 seconds for initialization..."
           sleep 60
-
-          echo "Checking running containers..."
-          docker ps -a
-
           echo "Checking API Gateway health..."
           curl --fail http://localhost:8090/actuator/health || exit 1
-
-          echo "All good. Shutting down environment..."
+          echo "Shutting down..."
           docker compose down
