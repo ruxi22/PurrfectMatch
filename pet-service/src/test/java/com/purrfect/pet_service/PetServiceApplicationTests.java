@@ -5,7 +5,7 @@ import com.purrfect.pet_service.domain.PetType;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class PetEntityTest {
+class PetServiceApplicationTests {
 
 	@Test
 	void petShouldStoreAndReturnValuesCorrectly() {

@@ -4,7 +4,7 @@ import com.purrfect.adoption_service.domain.AdoptionStatus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class AdoptionStatusTest {
+class AdoptionServiceApplicationTests {
 
 	@Test
 	void adoptionStatusEnumShouldContainExpectedValues() {

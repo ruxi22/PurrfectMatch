@@ -4,7 +4,7 @@ import com.purrfect.notification_service.domain.Notification;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class NotificationMessageTest {
+class NotificationServiceApplicationTests {
 
 	@Test
 	void notificationShouldFormatMessageCorrectly() {
