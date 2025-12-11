@@ -1,56 +1,50 @@
-name: CI Pipeline
+name: PurrfectMatch CI/CD Pipeline
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: "17"
-          distribution: "temurin"
+          java-version: '17'
+          distribution: 'temurin'
 
-      # ---------- BACKEND MICROSERVICES ----------
-      # Build Adoption Service
-      - name: Build Adoption Service
-        run: mvn -B -DskipTests clean package --file adoption-service/pom.xml
+      - name: Build auth-service
+        run: mvn -B -f auth-service/pom.xml clean package -DskipTests
 
-      # Build Notification Service
-      - name: Build Notification Service
-        run: mvn -B -DskipTests clean package --file notification-service/pom.xml
+      - name: Build pet-service
+        run: mvn -B -f pet-service/pom.xml clean package -DskipTests
 
-      # Build Pet Service
-      - name: Build Pet Service
-        run: mvn -B -DskipTests clean package --file pet-service/pom.xml
+      - name: Build adoption-service
+        run: mvn -B -f adoption-service/pom.xml clean package -DskipTests
 
-      # Build Auth Service
-      - name: Build Auth Service
-        run: mvn -B -DskipTests clean package --file auth-service/pom.xml
+      - name: Build notification-service
+        run: mvn -B -f notification-service/pom.xml clean package -DskipTests
 
-      # Build API Gateway
-      - name: Build API Gateway
-        run: mvn -B -DskipTests clean package --file api-gateway/pom.xml
+      - name: Build api-gateway
+        run: mvn -B -f api-gateway/pom.xml clean package -DskipTests
 
-      # ---------- DOCKER BUILDS ----------
-      - name: Build Docker Images
+      - name: Build frontend-service
+        run: mvn -B -f frontend-service/pom.xml clean package -DskipTests
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Simulate deployment
         run: |
-          docker build -t adoption-service ./adoption-service
-          docker build -t notification-service ./notification-service
-          docker build -t pet-service ./pet-service
-          docker build -t auth-service ./auth-service
-          docker build -t api-gateway ./api-gateway
-
-      # ---------- VALIDATE DOCKER COMPOSE ----------
-      - name: Validate Docker Compose
-        run: docker compose config
+          docker compose up -d
+          echo "Waiting for services to initialize..."
+          sleep 60
+          curl --fail http://localhost:8090/actuator/health || exit 1
+          docker compose down

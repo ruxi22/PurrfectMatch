@@ -2,7 +2,9 @@ package com.purrfect.auth_service.controller;
 
 import com.purrfect.auth_service.domain.Role;
 import com.purrfect.auth_service.domain.User;
+import com.purrfect.auth_service.dto.LoginResponse; // <--- Import nou
 import com.purrfect.auth_service.service.UserService;
+import com.purrfect.auth_service.util.JwtUtil; // <--- Import nou
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil; // <--- Injectam utilitarul pentru Tokene
+
     //registration endpoint
     @PostMapping("/register")
     public User register(@RequestBody User user) {
@@ -35,7 +40,7 @@ public class AuthController {
 
     //login endpoint
     @PostMapping("/login")
-    public User login(@RequestBody User loginData) {
+    public LoginResponse login(@RequestBody User loginData) { // <--- Returnam LoginResponse, nu User simplu
 
         Optional<User> found = userService.findByUsername(loginData.getUsername());
 
@@ -49,6 +54,13 @@ public class AuthController {
             throw new RuntimeException("Invalid password");
         }
 
-        return user;
+        // --- Generare Token și Răspuns ---
+        String token = jwtUtil.generateToken(user);
+
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
+        response.setUser(user);
+
+        return response;
     }
 }
