@@ -3,12 +3,15 @@ package com.purrfect.api_gateway;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ApiGatewayBasicTest {
+class ApiGatewayApplicationTests {
 
 	@Test
-	void basicLogicShouldWork() {
-		int a = 5;
-		int b = 7;
-		assertEquals(12, a + b, "Basic math sanity check for pipeline");
+	void serviceUrlShouldBeFormattedCorrectly() {
+		String baseUrl = "http://localhost:8081";
+		String endpoint = "/auth/login";
+
+		String fullUrl = baseUrl + endpoint;
+
+		assertEquals("http://localhost:8081/auth/login", fullUrl);
 	}
 }
