@@ -8,18 +8,16 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(PetController.class)
-class PetControllerTest {
+class PetServiceApplicationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
-	void pingShouldReturnOk() throws Exception {
-		mockMvc.perform(get("/ping"))
-				.andExpect(status().isOk())
-				.andExpect(content().string("pet-service-ok"));
+	void shouldReturnOkForPetsEndpoint() throws Exception {
+		mockMvc.perform(get("/api/pets"))   // schimbă path-ul dacă la tine e altceva
+				.andExpect(status().isOk());
 	}
 }
