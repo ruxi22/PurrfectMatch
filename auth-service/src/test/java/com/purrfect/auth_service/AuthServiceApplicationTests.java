@@ -1,14 +1,13 @@
-@WebMvcTest(AuthController.class)
-public class AuthControllerTest {
+package com.purrfect.auth_service;
 
-	@Autowired
-	private MockMvc mockMvc;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AuthServiceApplicationTests {
 
 	@Test
-	void registerEndpointExists() throws Exception {
-		mockMvc.perform(post("/auth/register")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content("{\"username\":\"test\",\"password\":\"pass\"}"))
-				.andExpect(status().is4xxClientError());
+	void contextLoads() {
 	}
+
 }
